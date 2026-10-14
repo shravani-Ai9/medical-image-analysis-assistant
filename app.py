@@ -106,15 +106,25 @@ with card3:
 with card4:
     st.metric("Output Classes", len(class_names) if "class_names" in globals() else 3)
 
-PROJECT = "/content/drive/MyDrive/AI_Medical_Image_Analysis"
-MODEL_PATH = os.path.join(PROJECT, "models", "medical_xray_efficientnet.keras")
-CLASSES_PATH = os.path.join(PROJECT, "models", "class_names.json")
+
+PROJECT = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(
+    PROJECT, "models", "medical_xray_efficientnet.keras"
+)
+CLASSES_PATH = os.path.join(
+    PROJECT, "models", "class_names.json"
+)
 
 @st.cache_resource
 def load_ai_model(path):
+    if not os.path.exists(path):
+        st.error("AI model file not found. Please configure the model for Streamlit Cloud.")
+        st.stop()
     return tf.keras.models.load_model(path)
 
 model = load_ai_model(MODEL_PATH)
+
 
 with open(CLASSES_PATH, "r") as f:
     class_names = json.load(f)
