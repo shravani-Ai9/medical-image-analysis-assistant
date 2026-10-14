@@ -45,3 +45,8 @@ Grad-CAM visualizations show regions influencing model output and are not medica
 
 ## Author
 Shravani Gudelli
+## Application Preview
+
+![Medical AI Dashboard](medical-ai-dashboard.png)
+
+The dashboard supports chest X-ray uploads, model output score visualization, Grad-CAM explainability, and educational PDF report generation.
