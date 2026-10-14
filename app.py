@@ -110,23 +110,37 @@ with card4:
     st.metric("Output Classes", len(class_names) if "class_names" in globals() else 3)
 
 
+
 PROJECT = os.path.dirname(os.path.abspath(__file__))
 
+MODEL_DIR = os.path.join(PROJECT, "models")
+os.makedirs(MODEL_DIR, exist_ok=True)
+
 MODEL_PATH = os.path.join(
-    PROJECT, "models", "medical_xray_efficientnet.keras"
+    MODEL_DIR, "medical_xray_efficientnet.keras"
 )
-CLASSES_PATH = os.path.join(
-    PROJECT, "models", "class_names.json"
-)
+CLASSES_PATH = os.path.join(PROJECT, "class_names.json")
+
+GOOGLE_DRIVE_FILE_ID = "1qX7JPvUy1XPD8_hYHqWe7cn7uctBPicA"
+
+if not os.path.exists(MODEL_PATH):
+    with st.spinner("Downloading AI model..."):
+        downloaded_file = gdown.download(
+            id=GOOGLE_DRIVE_FILE_ID,
+            output=MODEL_PATH,
+            quiet=False
+        )
+
+        if not downloaded_file or not os.path.exists(MODEL_PATH):
+            st.error("Model download failed. Check Google Drive sharing permissions.")
+            st.stop()
 
 @st.cache_resource
 def load_ai_model(path):
-    if not os.path.exists(path):
-        st.error("AI model file not found. Please configure the model for Streamlit Cloud.")
-        st.stop()
     return tf.keras.models.load_model(path)
 
 model = load_ai_model(MODEL_PATH)
+
 
 
 with open(CLASSES_PATH, "r") as f:
